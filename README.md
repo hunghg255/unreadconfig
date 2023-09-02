@@ -63,7 +63,7 @@ interface Config {
   name: string;
 }
 
-const result = loadConf<Config>('./app/app.config.js');
+const result = loadConf<Config>(path.resolve(process.cwd(), 'app/app.config.js'));
 // => { name: 'app' }
 ```
 
