@@ -18,9 +18,9 @@ $ npm i unreadconfig
 ## Quick start
 
 ```js
-const autoConf = require('unreadconfig');
+const { readConfig } = require('unreadconfig');
 
-import { autoConf } from 'unreadconfig';
+import { readConfig } from 'unreadconfig';
 
 // will look for:
 // process.cwd() + '.namespacerc'
@@ -38,7 +38,7 @@ import { autoConf } from 'unreadconfig';
 // process.cwd() + 'namespace.config.cjs'
 // process.cwd() + 'namespace.config.js'
 // ........
-const data = autoConf('namespace', {
+const data = readConfig('namespace', {
   default: {
     testItem2: 'some value'
   }
@@ -73,7 +73,7 @@ const result = loadConf<Config>('./app/app.config.js');
 import { LoadConfOption } from 'unreadconfig';
 export type LoaderFunc<T> = (filepath: string, content: string, jsOption?: LoadConfOption) => T;
 export type Loader<T> = Record<string, LoaderFunc<T>>;
-export interface AutoConfOption<T> {
+export interface readConfigOption<T> {
   searchPlaces?: string[];
   /** An object that maps extensions to the loader functions responsible for loading and parsing files with those extensions. */
   loaders?: Loader<T>;
@@ -89,10 +89,10 @@ export interface AutoConfOption<T> {
 }
 /**
  * Find and load configuration from a `package.json` property, `rc` file, or `CommonJS` module.
- * @param namespace {string} Configuration base name. The default is `autoconf`.
+ * @param namespace {string} Configuration base name. The default is `readConfig`.
  * @param option
  */
-export default function autoConf<T>(namespace?: string, option?: AutoConfOption<T>): {} & T;
+export default function readConfig<T>(namespace?: string, option?: readConfigOption<T>): {} & T;
 ```
 
 Discover configurations in the specified directory order. When configuring a tool, you can use multiple file formats and put these in multiple places. Usually, a tool would mention this in its own README file, but by default, these are the following places, where `${moduleName}` represents the name of the tool:
@@ -136,7 +136,7 @@ Discover configurations in the specified directory order. When configuring a too
 Configurations are loaded sequentially, and the configuration file search is terminated when a configuration file exists.
 
 
-The content of these files is defined by the tool. For example, you can add a `semi` configuration value to `false` using a file called `.config/autoconfig.yml`:
+The content of these files is defined by the tool. For example, you can add a `semi` configuration value to `false` using a file called `.config/readConfig.yml`:
 
 ```yml
 semi: true
@@ -147,7 +147,7 @@ Additionally, you have the option to put a property named after the tool in your
 ```js
 {
   "name": "your-project",
-  "autoconfig": {
+  "readConfig": {
     "semi": true
   }
 }
@@ -174,7 +174,7 @@ export declare function jsLoader<T>(filepath: string, content: string, option?: 
 Modify default `.js`,`.ts`,`.cjs`,`.mjs` loader parameters.
 
 ```js
-import load, { jsLoader } from 'unreadconfig';
+import { readConfig, jsLoader } from 'unreadconfig';
 
 function loadJS(filepath, content) {
   return jsLoader(filepath, content, {
@@ -182,7 +182,7 @@ function loadJS(filepath, content) {
   });
 }
 
-const data = load('namespace', {
+const data = readConfig('namespace', {
   loaders: {
     '.js': loadJS,
     '.ts': loadJS,
@@ -212,7 +212,7 @@ export declare function iniLoader<T>(_: string, content: string): T;
 example:
 
 ```ts
-import { iniLoader } from 'auto-config-loader';
+import { iniLoader } from 'unreadconfig';
 
 const data = iniLoader(undefined, `...`)
 ```
@@ -226,7 +226,7 @@ export declare function jsonLoader<T>(_: string, content: string): T;
 example:
 
 ```ts
-import { jsonLoader } from 'auto-config-loader';
+import { jsonLoader } from 'unreadconfig';
 
 const data = jsonLoader(undefined, `{ "a": 123 }`)
 ```
@@ -240,7 +240,7 @@ export declare function tomlLoader<T>(_: string, content: string): T;
 example:
 
 ```ts
-import { tomlLoader } from 'auto-config-loader';
+import { tomlLoader } from 'unreadconfig';
 
 const data = tomlLoader(undefined, `...`)
 ```
@@ -254,7 +254,7 @@ export declare function yamlLoader<T>(_: string, content: string): T;
 example:
 
 ```ts
-import { yamlLoader } from 'auto-config-loader';
+import { yamlLoader } from 'unreadconfig';
 
 const data = yamlLoader(undefined, `...`)
 ```
@@ -264,14 +264,14 @@ const data = yamlLoader(undefined, `...`)
 This is an example, the default `yaml`/`yml` does not require a loader.
 
 ```js
-import load from 'auto-config-loader';
+import { readConfig } from 'unreadconfig';
 import yaml from 'yaml';
 
 function loadYaml(filepath, content) {
   return yaml.parse(content);
 }
 
-const data = load('namespace', {
+const data = readConfig('namespace', {
   searchPlaces: [
     '.namespacerc.yaml',
     '.namespacerc.yml',
@@ -315,11 +315,11 @@ export declare const getConfigPath: () => string;
 Example:
 
 ```ts
-import { autoConf, getConfigPath } from 'auto-config-loader';
+import { readConfig, getConfigPath } from 'unreadconfig';
 
-const data = autoConf<Config>('idoc');
+const data = readConfig<Config>('idoc');
 const configPath = getConfigPath();
-// => /.autoconfrc.js
+// => /.readConfigrc.js
 ```
 
 ## Related

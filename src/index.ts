@@ -1,7 +1,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import merge from 'lodash.merge';
-import { jsLoader, LoadConfOption } from './loader/js';
+import { jsLoader, LoadConfOption, loadConf } from './loader/js';
 import { jsonLoader } from './loader/json';
 import { yamlLoader } from './loader/yaml';
 import { tomlLoader } from './loader/toml';
@@ -10,7 +10,7 @@ import { findConfigFile } from './utils';
 
 type LoaderFunc<T> = (filepath: string, content: string, jsOption?: LoadConfOption) => T;
 type Loader<T> = Record<string, LoaderFunc<T>>;
-interface AutoConfOption<T> {
+interface ReadConfigOption<T> {
   searchPlaces?: string[];
   /** An object that maps extensions to the loader functions responsible for loading and parsing files with those extensions. */
   loaders?: Loader<T>;
@@ -34,7 +34,7 @@ const getConfigPath = () => configPath;
  * @param namespace {string} Configuration base name. The default is `autoconf`.
  * @param option
  */
-function readConfig<T>(namespace: string = 'autoconf', option: AutoConfOption<T> = {}) {
+function readConfig<T>(namespace: string = 'autoconf', option: ReadConfigOption<T> = {}) {
   const {
     searchPlaces = [],
     default: defaultValue = {},
@@ -96,9 +96,9 @@ function readConfig<T>(namespace: string = 'autoconf', option: AutoConfOption<T>
     if (resultData) {
       return merge(defaultValue, resultData);
     }
-    console.log(`AUTO_CONF:ERROR: \x1b[31;1mCan't find config file\x1b[0m`);
+    console.log(`READ_CONF:ERROR: \x1b[31;1mCan't find config file\x1b[0m`);
   } catch (error) {
-    console.log(`AUTO_CONF:CATCH:ERROR: \x1b[31;1m${error}\x1b[0m`);
+    console.log(`READ_CONF:CATCH:ERROR: \x1b[31;1m${error}\x1b[0m`);
   }
 }
 
@@ -107,9 +107,9 @@ export {
   getConfigPath,
   merge,
   jsLoader,
+  loadConf,
   jsonLoader,
   yamlLoader,
   tomlLoader,
   iniLoader,
 }
-

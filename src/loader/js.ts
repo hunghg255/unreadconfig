@@ -14,7 +14,7 @@ export interface LoadConfOption {
   transformOption?: Options;
 }
 
-function loadConf<T>(path: string, option: LoadConfOption = {}): T {
+export function loadConf<T>(path: string, option: LoadConfOption = {}): T {
   const { jiti = true, jitiOptions } = option;
   let config = (function () {
     try {
