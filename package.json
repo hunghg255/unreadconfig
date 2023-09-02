@@ -1,6 +1,6 @@
 {
   "name": "unreadconfig",
-  "version": "0.0.1",
+  "version": "0.0.7",
   "license": "MIT",
   "sideEffects": false,
   "exports": {
@@ -26,7 +26,7 @@
     "start": "esno play/index.ts",
     "test": "vitest",
     "verify-commit": "verify-commit-msg",
-    "postinstall": "git-scm-hooks",
+    "prepare": "git-scm-hooks",
     "release": "bumpp -r && npm publish"
   },
   "author": "hunghg255",
@@ -82,5 +82,8 @@
     "typescript",
     "config-loader",
     "auto-config-loader"
-  ]
+  ],
+  "svgtofont": {
+    "foo": "bar"
+  }
 }
