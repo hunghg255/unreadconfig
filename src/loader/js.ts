@@ -2,10 +2,24 @@ import jitiFactory from 'jiti';
 import type { JITIOptions } from 'jiti/dist/types';
 import { Options } from 'sucrase';
 
+const detectOSType = () => {
+  switch (process.platform) {
+      case 'win32':  return 'Windows';
+      case 'linux':  return 'Linux';
+      case 'darwin': return 'Mac';
+      default:       return 'UNKNOWN';
+  }
+};
+
 function lazyJiti(rootDir: string = process.cwd(), option: JITIOptions = {}) {
   const split = rootDir.split('/');
   const _require = jitiFactory(rootDir, { interopDefault: true, esmResolve: true, ...option });
-  return _require(`${split[split.length - 1]}`);
+
+  if (detectOSType() === 'Windows') {
+    return _require(`${split[split.length - 1]}`);
+  }
+
+  return _require(`./${split[split.length - 1]}`);
 }
 
 export interface LoadConfOption {
