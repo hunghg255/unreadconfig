@@ -5,7 +5,7 @@ import { Options } from 'sucrase';
 function lazyJiti(rootDir: string = process.cwd(), option: JITIOptions = {}) {
   const split = rootDir.split('/');
   const _require = jitiFactory(rootDir, { interopDefault: true, esmResolve: true, ...option });
-  return _require(`./${split[split.length - 1]}`);
+  return _require(`${split[split.length - 1]}`);
 }
 
 export interface LoadConfOption {
