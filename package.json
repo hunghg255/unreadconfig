@@ -1,18 +1,21 @@
 {
   "name": "unreadconfig",
-  "version": "0.0.12",
+  "version": "0.0.13",
   "license": "MIT",
-  "sideEffects": false,
-  "exports": {
-    ".": {
-      "types": "./dist/index.d.ts",
-      "require": "./dist/index.cjs",
-      "import": "./dist/index.mjs"
-    }
-  },
-  "main": "./dist/index.mjs",
+  "main": "./dist/index.cjs",
   "module": "./dist/index.mjs",
   "types": "./dist/index.d.ts",
+  "exports": {
+    "import": {
+      "types": "./dist/index.d.mts",
+      "default": "./dist/index.mjs"
+    },
+    "require": {
+      "types": "./dist/index.d.cts",
+      "default": "./dist/index.cjs"
+    }
+  },
+  "sideEffects": false,
   "files": [
     "bin",
     "dist",
@@ -40,6 +43,7 @@
     "terser": "^5.19.3",
     "tslib": "^2.6.2",
     "typescript": "^5.2.2",
+    "unbuild": "^2.0.0",
     "verify-commit-msg": "^0.0.9"
   },
   "dependencies": {
@@ -49,7 +53,6 @@
     "lodash.merge": "^4.6.2",
     "sucrase": "^3.34.0",
     "toml-eslint-parser": "^0.6.0",
-    "unbuild": "^1.2.1",
     "yaml-eslint-parser": "^1.2.2"
   },
   "git-hooks": {
