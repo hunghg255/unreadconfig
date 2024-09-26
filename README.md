@@ -1,5 +1,19 @@
-unreadconfig
-===
+<p align="center">
+<a href="https://www.npmjs.com/package/unreadconfig" target="_blank" rel="noopener noreferrer">
+<img src="https://api.iconify.design/eos-icons:configuration-file-outlined.svg?color=%2380ffb7" alt="logo" width='100'/></a>
+</p>
+
+<p align="center">
+  A tiny JavaScript library read config file
+</p>
+
+<p align="center">
+  <a href="https://www.npmjs.com/package/unreadconfig" target="_blank" rel="noopener noreferrer"><img src="https://badge.fury.io/js/csvs-parsers.svg" alt="NPM Version" /></a>
+  <a href="https://www.npmjs.com/package/unreadconfig" target="_blank" rel="noopener noreferrer"><img src="https://img.shields.io/npm/dt/csvs-parsers.svg?logo=npm" alt="NPM Downloads" /></a>
+  <a href="https://bundlephobia.com/result?p=unreadconfig" target="_blank" rel="noopener noreferrer"><img src="https://img.shields.io/bundlephobia/minzip/unreadconfig" alt="Minizip" /></a>
+  <a href="https://github.com/hunghg255/unreadconfig/graphs/contributors" target="_blank" rel="noopener noreferrer"><img src="https://img.shields.io/badge/all_contributors-1-orange.svg" alt="Contributors" /></a>
+  <a href="https://github.com/hunghg255/unreadconfig/blob/main/LICENSE" target="_blank" rel="noopener noreferrer"><img src="https://badgen.net/github/license/hunghg255/unreadconfig" alt="License" /></a>
+</p>
 
 
 Find and load configuration from a `package.json` property, `rc` file, or `CommonJS` module. It has smart default based on traditional expectations in the JavaScript ecosystem. But it's also flexible enough to search anywhere you want and load whatever you want.
