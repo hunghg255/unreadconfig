@@ -1,5 +1,5 @@
-import path from 'path';
-import fs from 'fs';
+import fs from 'node:fs'
+import path from 'node:path'
 
 export function findConfigFile(moduleName: string, root: string, searchPlaces: string[] = []) {
   const data = [
@@ -32,13 +32,13 @@ export function findConfigFile(moduleName: string, root: string, searchPlaces: s
     `${moduleName}.config.ts`,
     `${moduleName}.config.cjs`,
     `${moduleName}.config.mjs`,
-  ];
+  ]
   for (const file of data) {
-    const filePath = path.resolve(root, file);
+    const filePath = path.resolve(root, file)
     if (fs.existsSync(filePath)) {
-      return filePath;
+      return filePath
     }
   }
 
-  return null;
+  return null
 }

@@ -1,6 +1,7 @@
 {
   "name": "unreadconfig",
   "version": "0.0.13",
+  "type": "module",
   "license": "MIT",
   "main": "./dist/index.cjs",
   "module": "./dist/index.mjs",
@@ -16,8 +17,15 @@
     }
   },
   "sideEffects": false,
+  "typesVersions": {
+    "*": {
+      "*": [
+        "./dist/*",
+        "./dist/index.d.ts"
+      ]
+    }
+  },
   "files": [
-    "bin",
     "dist",
     "LICENSE"
   ],
@@ -25,35 +33,36 @@
     "build": "unbuild",
     "dev": "unbuild --stub",
     "test:cli": "node ./dist/cli.mjs -w -p 1234 -c awesome",
-    "lint": "tsc --noEmit",
+    "lint": "eslint src",
     "start": "esno play/index.ts",
     "test": "vitest",
     "verify-commit": "verify-commit-msg",
     "prepare": "git-scm-hooks",
+    "prepublishOnly": "npm run build",
     "release": "bumpp -r && npm publish"
   },
   "author": "hunghg255",
   "devDependencies": {
-    "@types/ini": "^1.3.31",
-    "@types/lodash.merge": "^4.6.7",
-    "@types/node": "^18.17.13",
-    "bumpp": "^9.2.0",
+    "@antfu/eslint-config": "^3.7.2",
+    "@types/ini": "^1.3.34",
+    "@types/lodash.merge": "^4.6.9",
+    "@types/node": "^18.19.53",
+    "bumpp": "^9.5.2",
+    "eslint": "^9.11.1",
     "esno": "^0.16.3",
     "git-scm-hooks": "^0.0.7",
-    "terser": "^5.19.3",
-    "tslib": "^2.6.2",
-    "typescript": "^5.2.2",
+    "typescript": "^5.6.2",
     "unbuild": "^2.0.0",
     "verify-commit-msg": "^0.0.9"
   },
   "dependencies": {
-    "ini": "^4.1.1",
-    "jiti": "^1.19.3",
-    "jsonc-eslint-parser": "^2.3.0",
+    "ini": "^4.1.3",
+    "jiti": "^2.0.0",
+    "jsonc-eslint-parser": "^2.4.0",
     "lodash.merge": "^4.6.2",
-    "sucrase": "^3.34.0",
-    "toml-eslint-parser": "^0.6.0",
-    "yaml-eslint-parser": "^1.2.2"
+    "sucrase": "^3.35.0",
+    "toml-eslint-parser": "^0.6.1",
+    "yaml-eslint-parser": "^1.2.3"
   },
   "git-hooks": {
     "pre-commit": "npm run lint",
@@ -86,7 +95,5 @@
     "config-loader",
     "auto-config-loader"
   ],
-  "svgtofont": {
-    "foo": "bar"
-  }
+  "packageManager": "pnpm@8.15.9+sha512.499434c9d8fdd1a2794ebf4552b3b25c0a633abcee5bb15e7b5de90f32f47b513aca98cd5cfd001c31f0db454bc3804edccd578501e4ca293a6816166bbd9f81"
 }

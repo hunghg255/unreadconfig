@@ -1,33 +1,35 @@
-import fs from 'node:fs';
-import path from 'node:path';
-import merge from 'lodash.merge';
-import { jsLoader, LoadConfOption, loadConf } from './loader/js';
-import { jsonLoader } from './loader/json';
-import { yamlLoader } from './loader/yaml';
-import { tomlLoader } from './loader/toml';
-import { iniLoader } from './loader/ini';
-import { findConfigFile } from './utils';
+/* eslint-disable node/prefer-global/process */
+/* eslint-disable no-console */
+import type { LoadConfOption } from './loader/js'
+import fs from 'node:fs'
+import path from 'node:path'
+import merge from 'lodash.merge'
+import { iniLoader } from './loader/ini'
+import { jsLoader, loadConf } from './loader/js'
+import { jsonLoader } from './loader/json'
+import { tomlLoader } from './loader/toml'
+import { yamlLoader } from './loader/yaml'
+import { findConfigFile } from './utils'
 
-type LoaderFunc<T> = (filepath: string, content: string, jsOption?: LoadConfOption) => T;
-type Loader<T> = Record<string, LoaderFunc<T>>;
+type LoaderFunc<T> = (filepath: string, content: string, jsOption?: LoadConfOption) => T
+type Loader<T> = Record<string, LoaderFunc<T>>
 interface ReadConfigOption<T> {
-  searchPlaces?: string[];
+  searchPlaces?: string[]
   /** An object that maps extensions to the loader functions responsible for loading and parsing files with those extensions. */
-  loaders?: Loader<T>;
+  loaders?: Loader<T>
   /** Specify default configuration. It has the lowest priority and is applied after extending config. */
-  default?: T;
+  default?: T
   /** Resolve configuration from this working directory. The default is `process.cwd()` */
-  cwd?: string;
+  cwd?: string
   /** Default transform js configuration */
-  jsOption?: LoadConfOption;
-  /** @deprecated use `mustExist` instead */
-  ignoreLog?: boolean;
-  mustExist?: boolean;
+  jsOption?: LoadConfOption
+  /** `mustExist`  */
+  mustExist?: boolean
 }
 
-let configPath: any = '';
+let configPath: any = ''
 
-const getConfigPath = () => configPath;
+const getConfigPath = () => configPath
 
 /**
  * Find and load configuration from a `package.json` property, `rc` file, or `CommonJS` module.
@@ -39,10 +41,9 @@ function readConfig<T>(namespace: string = 'autoconf', option: ReadConfigOption<
     searchPlaces = [],
     default: defaultValue = {},
     cwd = process.cwd(),
-    ignoreLog = false,
-    mustExist = ignoreLog || false,
+    mustExist = false,
     jsOption,
-  } = option;
+  } = option
 
   const loaders: Loader<T> = {
     '.yml': yamlLoader,
@@ -57,59 +58,61 @@ function readConfig<T>(namespace: string = 'autoconf', option: ReadConfigOption<
     '.cjs': jsLoader,
     '.mjs': jsLoader,
     ...(option.loaders || {}),
-  };
+  }
 
-  const pkgPath = path.resolve(cwd, 'package.json');
+  const pkgPath = path.resolve(cwd, 'package.json')
 
-  configPath = findConfigFile(namespace, cwd, searchPlaces);
+  configPath = findConfigFile(namespace, cwd, searchPlaces)
 
-  let content = '';
-  let resultData: T | any;
-  let loaderFunc: LoaderFunc<T> | any;
+  let content = ''
+  let resultData: T | any
+  let loaderFunc: LoaderFunc<T> | any
   try {
-
     if (configPath) {
-      const extname = path.extname(configPath);
-      const basename = path.basename(configPath);
+      const extname = path.extname(configPath)
+      const basename = path.basename(configPath)
       if (new RegExp(`^(.?${namespace}rc)$`).test(basename)) {
-        content = fs.readFileSync(configPath, 'utf-8');
-        loaderFunc = loaders['.json'];
-      } else if (loaders[extname]) {
-        content = fs.readFileSync(configPath, 'utf-8');
-        loaderFunc = loaders[extname];
+        content = fs.readFileSync(configPath, 'utf-8')
+        loaderFunc = loaders['.json']
       }
-    } else if (fs.existsSync(pkgPath)) {
-      content = fs.readFileSync(pkgPath, 'utf-8');
-      const result = loaders['.json'](configPath, content);
-      resultData = (result as Record<string, T>)[namespace];
+      else if (loaders[extname]) {
+        content = fs.readFileSync(configPath, 'utf-8')
+        loaderFunc = loaders[extname]
+      }
+    }
+    else if (fs.existsSync(pkgPath)) {
+      content = fs.readFileSync(pkgPath, 'utf-8')
+      const result = loaders['.json'](configPath, content)
+      resultData = (result as Record<string, T>)[namespace]
     }
 
     if (content && loaderFunc) {
-      resultData = loaderFunc(configPath, content, jsOption);
+      resultData = loaderFunc(configPath, content, jsOption)
       if (typeof resultData === 'function') {
-        return merge(defaultValue, resultData, { default: resultData });
+        return merge(defaultValue, resultData, { default: resultData })
       }
     }
     if (!!mustExist && !configPath && !resultData) {
-      return null;
+      return null
     }
     if (resultData) {
-      return merge(defaultValue, resultData);
+      return merge(defaultValue, resultData)
     }
-    console.log(`READ_CONF:ERROR: \x1b[31;1mCan't find config file\x1b[0m`);
-  } catch (error) {
-    console.log(`READ_CONF:CATCH:ERROR: \x1b[31;1m${error}\x1b[0m`);
+    console.log(`READ_CONF:ERROR: \x1B[31;1mCan't find config file\x1B[0m`)
+  }
+  catch (error) {
+    console.log(`READ_CONF:CATCH:ERROR: \x1B[31;1m${error}\x1B[0m`)
   }
 }
 
 export {
-  readConfig,
   getConfigPath,
-  merge,
-  jsLoader,
-  loadConf,
-  jsonLoader,
-  yamlLoader,
-  tomlLoader,
   iniLoader,
+  jsLoader,
+  jsonLoader,
+  loadConf,
+  merge,
+  readConfig,
+  tomlLoader,
+  yamlLoader,
 }

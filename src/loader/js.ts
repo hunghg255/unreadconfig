@@ -1,50 +1,53 @@
-import jitiFactory from 'jiti';
-import type { JITIOptions } from 'jiti/dist/types';
-import { Options } from 'sucrase';
+/* eslint-disable ts/no-require-imports */
+/* eslint-disable node/prefer-global/process */
+import type { JitiOptions } from 'jiti'
+import type { Options } from 'sucrase'
+import { createJiti } from 'jiti'
 
-const detectOSType = () => {
+function detectOSType() {
   switch (process.platform) {
-      case 'win32':  return 'Windows';
-      case 'linux':  return 'Linux';
-      case 'darwin': return 'Mac';
-      default:       return 'UNKNOWN';
+    case 'win32': return 'Windows'
+    case 'linux': return 'Linux'
+    case 'darwin': return 'Mac'
+    default: return 'UNKNOWN'
   }
-};
+}
 
-function lazyJiti(rootDir: string = process.cwd(), option: JITIOptions = {}) {
-  const split = rootDir.split('/');
-  const _require = jitiFactory(rootDir, { interopDefault: true, esmResolve: true, ...option });
+function lazyJiti(rootDir: string = process.cwd(), option: JitiOptions = {}) {
+  const split = rootDir.split('/')
+  const _require = createJiti(rootDir, { interopDefault: true, ...option })
 
   if (detectOSType() === 'Windows') {
-    return _require(`${split[split.length - 1]}`);
+    return _require(`${split[split.length - 1]}`)
   }
 
-  return _require(`./${split[split.length - 1]}`);
+  return _require(`./${split[split.length - 1]}`)
 }
 
 export interface LoadConfOption {
-  jiti?: boolean;
-  jitiOptions?: JITIOptions;
-  transformOption?: Options;
+  jiti?: boolean
+  jitiOptions?: JitiOptions
+  transformOption?: Options
 }
 
 export function loadConf<T>(path: string, option: LoadConfOption = {}): T {
-  const { jiti = true, jitiOptions } = option;
-  let config = (function () {
+  const { jiti = true, jitiOptions } = option
+  const config = (function () {
     try {
       if (jiti) {
-        return path ? lazyJiti(path, jitiOptions): {};
-      } else {
-        return path ? require(path) : {};
+        return path ? lazyJiti(path, jitiOptions) : {}
       }
-    } catch {
-      return lazyJiti(path, jitiOptions);
+      else {
+        return path ? require(path) : {}
+      }
     }
-  })();
-  return config.default ?? config;
+    catch {
+      return lazyJiti(path, jitiOptions)
+    }
+  })()
+  return config.default ?? config
 }
 
-//@ts-ignore
-export const jsLoader =  <T>(filepath: string, content: string, option: LoadConfOption = {}): T => {
-  return loadConf<T>(filepath, option);
+export function jsLoader<T>(filepath: string, content: string, option: LoadConfOption = {}): T {
+  return loadConf<T>(filepath, option)
 }
